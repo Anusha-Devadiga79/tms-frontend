@@ -1,0 +1,51 @@
+<div class="add-task-container" style="max-width: 600px; margin: auto; padding: 20px;">
+  <h2>Add New Task</h2>
+  <form [formGroup]="taskForm" (ngSubmit)="submit()" style="display: flex; flex-direction: column; gap: 15px;">
+
+    <!-- Title -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" placeholder="Enter task title">
+      <div *ngIf="taskForm.controls['title'].touched && taskForm.controls['title'].invalid" class="text-danger">
+        <span *ngIf="taskForm.controls['title'].errors?.['required']">Title is required</span>
+      </div>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="Enter task description"></textarea>
+    </mat-form-field>
+
+    <!-- Due Date -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Due Date</mat-label>
+      <input matInput type="date" formControlName="dueDate">
+      <div *ngIf="taskForm.controls['dueDate'].touched && taskForm.controls['dueDate'].invalid" class="text-danger">
+        <span *ngIf="taskForm.controls['dueDate'].errors?.['required']">Due Date is required</span>
+      </div>
+    </mat-form-field>
+
+    <!-- Priority -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option *ngFor="let p of priorities" [value]="p">{{ p }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Status -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Buttons -->
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <button mat-raised-button color="primary" type="submit">{{ taskForm.value.taskId ? 'Update Task' : 'Add Task' }}</button>
+      <button mat-stroked-button color="warn" routerLink="/dashboard">Cancel</button>
+    </div>
+  </form>
+</div>

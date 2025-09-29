@@ -1,0 +1,84 @@
+<div class="dashboard-container" style="padding: 20px;">
+  <h2>Task Dashboard</h2>
+
+  <!-- Filter Dropdown and Add Task -->
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+    <label for="statusFilter">Filter by Status:</label>
+
+    <select id="statusFilter" [(ngModel)]="filterStatus" (change)="filterTasks(filterStatus)">
+      <option value="All">All</option>
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+
+    <button mat-raised-button color="primary" style="margin-left: auto;" (click)="toggleAddForm()">
+      {{ showForm ? 'Close Form' : 'Add New Task' }}
+    </button>
+  </div>
+
+  <!-- Task Form -->
+  <div *ngIf="showForm" style="margin-bottom: 20px;">
+    <app-task-form [task]="editTaskData" (ngSubmit)="onFormSubmit()"></app-task-form>
+  </div>
+
+  <!-- Tasks Table -->
+  <table mat-table [dataSource]="tasks" class="mat-elevation-z8 full-width">
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let task"> {{task.Title}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let task"> {{task.Description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dueDate">
+      <th mat-header-cell *matHeaderCellDef> Due Date </th>
+      <td mat-cell *matCellDef="let task"> {{task.DueDate | date:'dd-MM-yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef> Priority </th>
+      <td mat-cell *matCellDef="let task"> {{task.Priority}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let task"> {{task.status}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let task">
+        <button mat-button color="accent" (click)="editTask(task)">Edit</button>
+        <button mat-button color="warn" (click)="deleteTask(task.TaskId!)">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['title','description','dueDate','priority','status','actions']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['title','description','dueDate','priority','status','actions']"></tr>
+  </table>
+</div>
+
+<style>
+select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: white;
+}
+
+button:hover {
+  background-color: #e0e0e0;
+}
+</style>

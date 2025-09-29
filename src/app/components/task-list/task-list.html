@@ -1,0 +1,103 @@
+<h2>Task Dashboard</h2>
+
+<!-- Filter Dropdown and Add Task Toolbar -->
+<div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+  <label for="statusFilter">Filter by Status:</label>
+  <select id="statusFilter" [(ngModel)]="filterStatus" (change)="filterTasks(filterStatus)">
+    <option value="All">All</option>
+    <option value="Pending">Pending</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Completed">Completed</option>
+  </select>
+
+  <button style="margin-left:auto;" (click)="addNewTask()">Add New Task</button>
+</div>
+
+<!-- Form for Add/Edit Task -->
+<app-task-form *ngIf="selectedTask" 
+               [task]="selectedTask" 
+               (ngSubmit)="onFormSubmit()">
+</app-task-form>
+
+<!-- Tasks Table -->
+<table border="1" width="100%" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>
+        Due Date 
+        <button (click)="sortTasks('dueDate')">↕</button>
+      </th>
+      <th>
+        Priority 
+        <button (click)="sortTasks('priority')">↕</button>
+      </th>
+      <th>
+        Status 
+        <button (click)="sortTasks('status')">↕</button>
+      </th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{ task.title }}</td>
+      <td>{{ task.description }}</td>
+      <td>{{ task.dueDate | date:'dd-MM-yyyy' }}</td>
+      <td>{{ task.priority }}</td>
+      <td>{{ task.status }}</td>
+      <td>
+        <button (click)="editTask(task)">Edit</button>
+        <button (click)="deleteTask(task.TaskId!)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+/* Toolbar styling */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+select {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+button {
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+.add-task-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.add-task-btn:hover {
+  background-color: #0056b3;
+}
+</style>

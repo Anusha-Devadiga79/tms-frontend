@@ -1,0 +1,29 @@
+<div class="register-container" style="max-width: 400px; margin: auto; padding: 20px;">
+  <h2>Register</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter your name">
+      <mat-error *ngIf="registerForm.get('name')?.hasError('required')">Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Enter your email">
+      <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email is required</mat-error>
+      <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Enter a valid email</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="Enter password">
+      <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Password is required</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="full-width">Register</button>
+  </form>
+
+  <p style="margin-top: 10px;">
+    Already have an account? <a routerLink="/login">Login</a>
+  </p>
+</div>

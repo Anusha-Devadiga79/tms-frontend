@@ -1,32 +1,33 @@
-Absolutely! I’ve updated both README files based on your changes: your `.env`, backend run command (`node server.js`), frontend run command (`ng serve`), and the schema with sample data. These are now ready-to-use for your GitHub repos.
+---
+
+# **Task Management System - Frontend**
+
+This is the **Angular frontend** for the **Task Management System (TMS)**.
+It provides a responsive UI for users to register, log in, manage tasks, and filter them by status.
 
 ---
 
-## **Frontend README (`tms-frontend`)**
+## **Features**
 
-```markdown
-# Task Management System - Frontend
+* **User Authentication**: Registration & Login (JWT-based)
+* **Dashboard**:
 
-This is the **Angular frontend** for the Task Management System (TMS).  
-It allows users to register, login, view tasks, add/edit/delete tasks, and filter them by status.
+  * View tasks in a table format
+  * Add, Edit, Delete tasks
+  * Filter tasks by status: All, Pending, In Progress, Completed
+* **Form Validations**:
 
-## Features
+  * Required fields
+  * Valid email for registration
+  * Due date must be in the future
+* Responsive UI for desktop and mobile
+* Built with Angular, Angular Material, and Reactive Forms
 
-- User Authentication (Login & Register)
-- Dashboard to view tasks in a table format
-- Add, Edit, Delete tasks
-- Filter tasks by status: All, Pending, In Progress, Completed
-- Responsive UI (desktop + mobile friendly)
-- Form validations:
-  - Required fields
-  - Valid email for registration
-  - Due date must be in the future
-- Built with Angular, Angular Material, and Reactive Forms
+---
 
-## Project Structure
+## **Project Structure**
 
 ```
-
 src/
 ├── app/
 │   ├── pages/
@@ -40,38 +41,53 @@ src/
 │   └── services/
 │       └── task.ts
 └── assets/
+```
 
-````
+---
 
-## Setup Instructions
+## **Setup Instructions**
 
-1. Clone the repository:
+1. **Clone the repository**:
+
 ```bash
 git clone https://github.com/Anusha-Devadiga79/tms-frontend.git
 cd tms-frontend
-````
+```
 
-2. Install dependencies:
+2. **Install dependencies**:
 
 ```bash
 npm install
 ```
 
-3. Run the Angular development server:
+3. **Run the Angular development server**:
 
 ```bash
 ng serve
 ```
 
-4. Open your browser at `http://localhost:4200`.
+4. **Open your browser**:
 
-## Notes
+```
+http://localhost:4200
+```
 
-* Make sure the **backend API** is running before using the frontend.
-* API URLs can be configured in `task.service.ts`.
+---
 
-## Links
+## **Notes**
+
+* Ensure the **backend API** is running before using the frontend.
+* API URLs can be configured in `task.ts`.
+* For production deployment, build the project with:
+
+```bash
+ng build --prod
+```
+
+---
+
+## **Links**
 
 * Backend Repository: [tms-backend](https://github.com/Anusha-Devadiga79/tms-backend)
 
-````
+---

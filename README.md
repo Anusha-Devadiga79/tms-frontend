@@ -38,9 +38,11 @@ src/
 │   │   └── edit-task/
 │   ├── components/
 │   │   └── task-form/
+|   |   └── task-list/
 │   └── services/
-│       └── task.ts
-└── assets/
+│   |  └── task.ts
+|   |  └── auth.ts
+└── environments/
 ```
 
 ---

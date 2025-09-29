@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 
 export interface Task {
   TaskId?: number;
-  title: string;
-  description?: string;
-  dueDate: string;
-  priority?: 'Low' | 'Medium' | 'High';
-  status?: 'Pending' | 'In Progress' | 'Completed';
+  Title: string;
+  Description?: string;
+  DueDate: string | null;
+  Priority?: 'Low' | 'Medium' | 'High';
+  Status?: 'Pending' | 'In Progress' | 'Completed';
 }
 
 @Injectable({
@@ -20,7 +20,7 @@ export class TaskService {
   constructor(private http: HttpClient) {}
 
   private getHeaders() {
-    const token = localStorage.getItem('token'); // 💡 Ensure token is sent
+    const token = localStorage.getItem('token'); 
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -38,11 +38,31 @@ export class TaskService {
   }
 
   addTask(task: Task): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, task, this.getHeaders());
+    // Prepare payload for backend
+    const payload = {
+      Title: task.Title,
+      Description: task.Description || '',
+      DueDate: task.DueDate
+        ? new Date(task.DueDate).toISOString().split('T')[0]
+        : '2025-10-10', // fallback default
+      Priority: task.Priority || 'Low',
+      Status: task.Status || 'Pending'
+    };
+    return this.http.post<Task>(this.apiUrl, payload, this.getHeaders());
   }
 
   updateTask(id: number, task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.apiUrl}/${id}`, task, this.getHeaders());
+    // Prepare payload for backend
+    const payload = {
+      Title: task.Title,
+      Description: task.Description || '',
+      DueDate: task.DueDate
+        ? new Date(task.DueDate).toISOString().split('T')[0]
+        : '2025-10-10', // fallback default
+      Priority: task.Priority || 'Low',
+      Status: task.Status || 'Pending'
+    };
+    return this.http.put<Task>(`${this.apiUrl}/${id}`, payload, this.getHeaders());
   }
 
   deleteTask(id: number): Observable<any> {

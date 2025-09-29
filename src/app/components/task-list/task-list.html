@@ -27,26 +27,26 @@
       <th>Description</th>
       <th>
         Due Date 
-        <button (click)="sortTasks('dueDate')">↕</button>
+        <button (click)="sortTasks('DueDate')">↕</button>
       </th>
       <th>
         Priority 
-        <button (click)="sortTasks('priority')">↕</button>
+        <button (click)="sortTasks('Priority')">↕</button>
       </th>
       <th>
         Status 
-        <button (click)="sortTasks('status')">↕</button>
+        <button (click)="sortTasks('Status')">↕</button>
       </th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let task of tasks">
-      <td>{{ task.title }}</td>
-      <td>{{ task.description }}</td>
-      <td>{{ task.dueDate | date:'dd-MM-yyyy' }}</td>
-      <td>{{ task.priority }}</td>
-      <td>{{ task.status }}</td>
+      <td>{{ task.Title }}</td>
+      <td>{{ task.Description }}</td>
+      <td>{{ task.DueDate | date:'dd-MM-yyyy' }}</td>
+      <td>{{ task.Priority }}</td>
+      <td>{{ task.Status }}</td>
       <td>
         <button (click)="editTask(task)">Edit</button>
         <button (click)="deleteTask(task.TaskId!)">Delete</button>

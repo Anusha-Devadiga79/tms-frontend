@@ -22,10 +22,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 })
 export class Dashboard {
   tasks: Task[] = [];
-  allTasks: Task[] = []; // backup for filtering
+  allTasks: Task[] = []; 
   showForm = false;
   editTaskData?: Task;
+
   filterStatus: 'All' | 'Pending' | 'In Progress' | 'Completed' = 'All';
+  filterPriority: 'All' | 'Low' | 'Medium' | 'High' = 'All';
+  filterDue: 'All' | 'Today' | 'This Week' = 'All';
 
   constructor(private taskService: TaskService) {
     this.loadTasks();
@@ -35,7 +38,8 @@ export class Dashboard {
     this.taskService.getTasks().subscribe({
       next: (res) => {
         this.tasks = res;
-        this.allTasks = [...res]; // backup for filtering
+        this.allTasks = [...res]; 
+        this.applyFilters();
       },
       error: (err) => console.error(err)
     });
@@ -66,9 +70,43 @@ export class Dashboard {
     this.loadTasks();
   }
 
-  // Filter tasks by status
-  filterTasks(status: 'All' | 'Pending' | 'In Progress' | 'Completed') {
-    this.filterStatus = status;
-    this.tasks = status === 'All' ? [...this.allTasks] : this.allTasks.filter(t => t.status === status);
+  filterTasks(status?: any, priority?: any, due?: any) {
+    if (status) this.filterStatus = status;
+    if (priority) this.filterPriority = priority;
+    if (due) this.filterDue = due;
+    this.applyFilters();
+  }
+
+  private applyFilters() {
+    let filtered = [...this.allTasks];
+
+    // Filter by Status
+    if (this.filterStatus !== 'All') {
+      filtered = filtered.filter(t => t.Status === this.filterStatus);
+    }
+
+    // Filter by Priority
+    if (this.filterPriority !== 'All') {
+      filtered = filtered.filter(t => t.Priority === this.filterPriority);
+    }
+
+    // Filter by Due Date
+    const today = new Date();
+    const startOfWeek = new Date();
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    const endOfWeek = new Date();
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    if (this.filterDue === 'Today') {
+      filtered = filtered.filter(t => t.DueDate && new Date(t.DueDate).toDateString() === today.toDateString());
+    } else if (this.filterDue === 'This Week') {
+      filtered = filtered.filter(t => {
+        if (!t.DueDate) return false;
+        const d = new Date(t.DueDate);
+        return d >= startOfWeek && d <= endOfWeek;
+      });
+    }
+
+    this.tasks = filtered;
   }
 }

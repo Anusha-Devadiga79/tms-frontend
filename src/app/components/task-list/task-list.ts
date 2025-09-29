@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { TaskService, Task } from '../../services/task';
 import { TaskForm } from '../task-form/task-form';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ Required for ngModel
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, TaskForm, FormsModule], // ✅ FormsModule for ngModel
+  imports: [CommonModule, TaskForm, FormsModule],
   templateUrl: './task-list.html'
 })
 export class TaskList implements OnInit {
@@ -44,7 +44,7 @@ export class TaskList implements OnInit {
 
     this.taskService.deleteTask(taskId).subscribe({
       next: () => {
-        alert('🗑️ Task deleted successfully!');
+        alert('Task deleted successfully!');
         this.loadTasks();
       },
       error: (err) => console.error('Delete Task Error:', err)
@@ -54,11 +54,11 @@ export class TaskList implements OnInit {
   // Add new task
   addNewTask() {
     this.selectedTask = {
-      title: '',
-      description: '',
-      dueDate: '',
-      priority: 'Low',
-      status: 'Pending'
+      Title: '',
+      Description: '',
+      DueDate: '',
+      Priority: 'Low',
+      Status: 'Pending'
     };
   }
 
@@ -69,17 +69,17 @@ export class TaskList implements OnInit {
   }
 
   // Sort tasks
-  sortTasks(by: 'dueDate' | 'priority' | 'status') {
+  sortTasks(by: 'DueDate' | 'Priority' | 'Status') {
     this.tasks.sort((a, b) => {
-      if (by === 'dueDate') {
-        const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
-        const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+      if (by === 'DueDate') {
+        const dateA = a.DueDate ? new Date(a.DueDate).getTime() : 0;
+        const dateB = b.DueDate ? new Date(b.DueDate).getTime() : 0;
         return dateA - dateB;
       }
-      if (by === 'priority') {
-        return (a.priority || '').localeCompare(b.priority || '');
+      if (by === 'Priority') {
+        return (a.Priority || '').localeCompare(b.Priority || '');
       }
-      return (a.status || '').localeCompare(b.status || '');
+      return (a.Status || '').localeCompare(b.Status || '');
     });
   }
 
@@ -88,6 +88,6 @@ export class TaskList implements OnInit {
     this.filterStatus = status;
     this.tasks = status === 'All'
       ? [...this.allTasks]
-      : this.allTasks.filter(t => t.status === status);
+      : this.allTasks.filter(t => t.Status === status);
   }
 }

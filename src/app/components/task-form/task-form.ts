@@ -14,7 +14,12 @@ export class TaskForm implements OnInit, OnChanges {
   @Output() ngSubmit = new EventEmitter<void>();
   taskForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private taskService: TaskService) {}
+  minDate!: string; // For disabling past dates in date picker
+
+  constructor(private fb: FormBuilder, private taskService: TaskService) {
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0]; // Set min date to today
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -22,37 +27,60 @@ export class TaskForm implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['task'] && this.task) {
-      const formattedDate = this.task.dueDate ? new Date(this.task.dueDate).toISOString().split('T')[0] : '';
+      const formattedDate = this.task.DueDate
+        ? new Date(this.task.DueDate).toISOString().split('T')[0]
+        : this.minDate;
       this.taskForm?.reset({
-        title: this.task.title,
-        description: this.task.description,
-        dueDate: formattedDate,
-        priority: this.task.priority || 'Low',
-        status: this.task.status || 'Pending'
+        Title: this.task.Title || 'New Task',
+        Description: this.task.Description || 'Description here',
+        DueDate: formattedDate,
+        Priority: this.task.Priority || 'Low',
+        Status: this.task.Status || 'Pending'
       });
     }
   }
 
   private buildForm() {
-    const formattedDate = this.task?.dueDate ? new Date(this.task.dueDate).toISOString().split('T')[0] : '';
-    
+    const formattedDate = this.task?.DueDate
+      ? new Date(this.task.DueDate).toISOString().split('T')[0]
+      : this.minDate;
+
     this.taskForm = this.fb.group({
-      title: [this.task?.title || '', Validators.required],
-      description: [this.task?.description || '', Validators.required],
-      dueDate: [formattedDate, Validators.required],
-      priority: [this.task?.priority || 'Low', Validators.required],
-      status: [this.task?.status || 'Pending', Validators.required]
+      Title: [this.task?.Title || 'New Task', Validators.required],
+      Description: [this.task?.Description || 'Description here', Validators.required],
+      DueDate: [formattedDate, [Validators.required, this.futureDateValidator]],
+      Priority: [this.task?.Priority || 'Low', Validators.required],
+      Status: [this.task?.Status || 'Pending', Validators.required]
     });
   }
 
-  submit() {
-    if (this.taskForm.invalid) return;
+  // Custom validator: Future Date Only
+  futureDateValidator(control: any) {
+    if (!control.value) return null;
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time for comparison
+    return selectedDate >= today ? null : { pastDate: true };
+  }
 
-    const taskData: Task = this.taskForm.value;
+  submit() {
+    if (this.taskForm.invalid) {
+      this.taskForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.taskForm.value;
+
+    const payload: Task = {
+      Title: formValue.Title,
+      Description: formValue.Description || '',
+      DueDate: formValue.DueDate ? new Date(formValue.DueDate).toISOString().split('T')[0] : this.minDate,
+      Priority: formValue.Priority || 'Low',
+      Status: formValue.Status || 'Pending'
+    };
 
     if (this.task?.TaskId) {
-      // UPDATE existing task
-      this.taskService.updateTask(this.task.TaskId, taskData).subscribe({
+      this.taskService.updateTask(this.task.TaskId, payload).subscribe({
         next: () => {
           alert('Task updated successfully!');
           this.ngSubmit.emit();
@@ -60,8 +88,7 @@ export class TaskForm implements OnInit, OnChanges {
         error: (err) => console.error('Update Task Error:', err)
       });
     } else {
-      // ADD new task
-      this.taskService.addTask(taskData).subscribe({
+      this.taskService.addTask(payload).subscribe({
         next: () => {
           alert('Task added successfully!');
           this.ngSubmit.emit();

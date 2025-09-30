@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,9 +20,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   tasks: Task[] = [];
   allTasks: Task[] = []; 
+  todayTasks: Task[] = [];
   showForm = false;
   editTaskData?: Task;
 
@@ -30,8 +31,14 @@ export class Dashboard {
   filterPriority: 'All' | 'Low' | 'Medium' | 'High' = 'All';
   filterDue: 'All' | 'Today' | 'This Week' = 'All';
 
-  constructor(private taskService: TaskService) {
+  // View toggle: table or cards
+  viewAsCards: boolean = false;
+  
+  constructor(private taskService: TaskService) {}
+
+  ngOnInit() {
     this.loadTasks();
+    this.loadTodayTasks(true); // Use SP by default; set false to filter locally
   }
 
   loadTasks() {
@@ -42,6 +49,13 @@ export class Dashboard {
         this.applyFilters();
       },
       error: (err) => console.error(err)
+    });
+  }
+
+  loadTodayTasks(useSP: boolean) {
+    this.taskService.getTasksToday(useSP).subscribe({
+      next: tasks => this.todayTasks = tasks,
+      error: err => console.error('Failed to load today\'s tasks', err)
     });
   }
 
@@ -68,6 +82,7 @@ export class Dashboard {
     this.showForm = false;
     this.editTaskData = undefined;
     this.loadTasks();
+    this.loadTodayTasks(true); // refresh today's tasks
   }
 
   filterTasks(status?: any, priority?: any, due?: any) {
@@ -79,6 +94,11 @@ export class Dashboard {
 
   private applyFilters() {
     let filtered = [...this.allTasks];
+    const today = new Date();
+    const startOfWeek = new Date();
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    const endOfWeek = new Date();
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
     // Filter by Status
     if (this.filterStatus !== 'All') {
@@ -91,12 +111,6 @@ export class Dashboard {
     }
 
     // Filter by Due Date
-    const today = new Date();
-    const startOfWeek = new Date();
-    startOfWeek.setDate(today.getDate() - today.getDay());
-    const endOfWeek = new Date();
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-
     if (this.filterDue === 'Today') {
       filtered = filtered.filter(t => t.DueDate && new Date(t.DueDate).toDateString() === today.toDateString());
     } else if (this.filterDue === 'This Week') {
@@ -108,5 +122,20 @@ export class Dashboard {
     }
 
     this.tasks = filtered;
+  }
+
+  onStatusChange(status: string) {
+    this.filterStatus = status as any;
+    this.applyFilters();
+  }
+
+  onPriorityChange(priority: string) {
+    this.filterPriority = priority as any;
+    this.applyFilters();
+  }
+
+  onDueChange(due: string) {
+    this.filterDue = due as any;
+    this.applyFilters();
   }
 }

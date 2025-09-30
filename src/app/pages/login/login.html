@@ -1,23 +1,102 @@
-<div class="login-container" style="max-width: 400px; margin: auto; padding: 20px;">
-  <h2>Login</h2>
-  <form [formGroup]="loginForm" (ngSubmit)="submit()">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" type="email" placeholder="Enter your email">
-      <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
-      <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Enter a valid email</mat-error>
-    </mat-form-field>
+<div class="login-page-container">
+  <div class="login-container">
+    <h2>Login</h2>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Password</mat-label>
-      <input matInput formControlName="password" type="password" placeholder="Enter your password">
-      <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
-    </mat-form-field>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
 
-    <button mat-raised-button color="primary" type="submit" class="full-width">Login</button>
-  </form>
+      <!-- Email Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="Enter your email">
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Enter a valid email</mat-error>
+      </mat-form-field>
 
-  <p style="margin-top: 10px;">
-    Don't have an account? <a routerLink="/register">Register</a>
-  </p>
+      <!-- Password Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="Enter your password">
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+      </mat-form-field>
+
+      <!-- Remember Me Checkbox (disabled until password is entered) -->
+      <mat-checkbox 
+        formControlName="rememberMe" 
+        class="remember-me"
+        [disabled]="!loginForm.get('password')?.value"
+      >
+        Remember me
+      </mat-checkbox>
+
+      <!-- Login Button -->
+      <button mat-raised-button type="submit" class="full-width login-btn">
+        Login
+      </button>
+    </form>
+
+    <!-- Register link -->
+    <p class="register-text">
+      Don't have an account? 
+      <a routerLink="/register">Register</a>
+    </p>
+  </div>
 </div>
+
+<style>
+/* Full page flex container to center the form */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background: #ffffff; /* White background */
+  text-align: center;
+}
+
+/* Login container (no box) */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 0 20px;
+}
+
+/* Heading */
+.login-container h2 {
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 28px;
+}
+
+/* Full width mat form fields */
+.full-width {
+  width: 100%;
+}
+
+/* Remember me spacing */
+.remember-me {
+  display: block;
+  margin: 15px 0;
+}
+
+/* Login button */
+.login-btn {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  margin-bottom: 20px;
+  background-color: #1976d2; /* Blue background */
+  color: white; /* White text */
+  font-weight: 500;
+}
+
+/* Register link */
+.register-text {
+  font-size: 15px;
+}
+
+.register-text a {
+  color: #1976d2;
+  font-weight: 500;
+  text-decoration: none;
+}
+</style>
